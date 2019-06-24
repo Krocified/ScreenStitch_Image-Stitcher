@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'C:\Users\OWNER\Desktop\screenstitch2.ui'
-#
-# Created by: PyQt5 UI code generator 5.11.3
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from imutils import paths
 import os
@@ -56,12 +48,12 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ScreenStitch"))
-        self.selectFolder.setText(_translate("MainWindow", "Select Folder"))
+        self.selectFolder.setText(_translate("MainWindow", "Select Images"))
         self.stitchBtn.setText(_translate("MainWindow", "Generate Stitching"))
         self.ClearBtn.setText(_translate("MainWindow", "Clear"))
 
     def getFolder(self):
-        OutputFolder, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Folder", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
+        OutputFolder, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Images", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
         self.listWidget.addItem(OutputFolder)
 
     def clearScreen(self):
@@ -100,8 +92,12 @@ class Ui_MainWindow(object):
             self.result.setPixmap(pixmap)
             self.result.setAlignment(QtCore.Qt.AlignCenter)
 
+        elif status == 1: 
+            self.listWidget.addItem("[INFO] image stitching failed: needs more images (1)")
+        elif status == 2: 
+            self.listWidget.addItem("[INFO] image stitching failed: not enough keypoints (2)")  
         else:
-            self.listWidget.addItem("[INFO] image stitching failed")
+            self.listWidget.addItem("[INFO] image stitching failed: camera error (3)")
 
 
 if __name__ == "__main__":
