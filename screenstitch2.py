@@ -53,8 +53,9 @@ class Ui_MainWindow(object):
         self.ClearBtn.setText(_translate("MainWindow", "Clear"))
 
     def getFolder(self):
-        OutputFolder, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Images", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
-        self.listWidget.addItem(OutputFolder)
+        files, _ = QtWidgets.QFileDialog.getOpenFileNames(None, "Select Images", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
+        if files:
+            self.listWidget.addItems(files)
 
     def clearScreen(self):
         self.listWidget.clear()
@@ -71,7 +72,7 @@ class Ui_MainWindow(object):
         images = []
 
         for imagePath in imagePaths:
-            image = cv2.imread(imagePath)
+            image = cv2.imdecode(np.fromfile(imagePath, dtype=np.uint8), cv2.IMREAD_COLOR)
             image = imutils.rotate_bound(image, 90)
             images.append(image)
 
@@ -81,7 +82,7 @@ class Ui_MainWindow(object):
     
         if status == 0:
             stitched = imutils.rotate_bound(stitched, 270)
-            cv2.imwrite("output.png", stitched)
+            cv2.imencode(".png", stitched)[1].tofile("output.png")
             self.listWidget.addItem("[INFO] image stitching success...")
             self.listWidget.addItem("[INFO] Results are saved at screenstitch directory")
 
